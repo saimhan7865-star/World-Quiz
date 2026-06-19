@@ -1,1 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>World Flags & Capitals Quiz Pro</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+    }
 
+    .box {
+      background: white;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 10px gray;
+    }
+
+    img {
+      width: 120px;
+      margin: 10px;
+    }
+
+    button {
+      display: block;
+      width: 90%;
+      margin: 8px auto;
+      padding: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #eee;
+    }
+
+    button:hover {
+      background: #ddd;
+    }
+
+    .correct { background: green; color: white; }
+    .wrong { background: red; color: white; }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2 id="question">Loading...</h2>
+  <img id="flag" style="display:none;" />
+  <div id="options"></div>
+  <h3>Score: <span id="score">0</span></h3>
+</div>
+
+<script>
+let countries = [];
+let index = 0;
+let score = 0;
+let currentAnswer = "";
+
+// 🌍 Load 195 countries from API
+async function loadCountries() {
+  let res = await fetch("https://restcountries.com/v3.1/all");
+  let data = await res.json();
+
+  countries = data.map(c => ({
+    name: c.name.common,
+    capital: c.capital ? c.capital[0] : "N/A",
+    flag: c.flags.png
+  }));
+
+  startQuiz();
+}
+
+function startQuiz() {
+  countries = countries.sort(() => Math.random() - 0.5);
+  showQuestion();
+}
+
+function showQuestion() {
+  let qType = Math.random() > 0.5 ? "capital" : "flag";
+  let country = countries[index];
+
+  let options = [];
+
+  if (qType === "capital") {
+    document.getElementById("flag").style.display = "none";
+    document.getElementById("question").innerText =
+      "What is the capital of " + country.name + "?";
+
+    currentAnswer = country.capital;
+
+    options.push(country.capital);
+
+    while (options.length < 4) {
+      let random = countries[Math.floor(Math.random() * countries.length)].capital;
+      if (!options.includes(random)) options.push(random);
+    }
+  } else {
+    document.getElementById("flag").style.display = "block";
+    document.getElementById("flag").src = country.flag;
+
+    document.getElementById("question").innerText =
+      "Which country does this flag belong to?";
+
+    currentAnswer = country.name;
+
+    options.push(country.name);
+
+    while (options.length < 4) {
+      let random = countries[Math.floor(Math.random() * countries.length)].name;
+      if (!options.includes(random)) options.push(random);
+    }
+  }
+
+  options = options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    html += `<button onclick="check(this)">${opt}</button>`;
+  });
+
+  document.getElementById("options").innerHTML = html;
+}
+
+function check(btn) {
+  if (btn.innerText === currentAnswer) {
+    btn.classList.add("correct");
+    score++;
+  } else {
+    btn.classList.add("wrong");
+  }
+
+  document.getElementById("score").innerText = score;
+
+  setTimeout(() => {
+    index++;
+    if (index >= countries.length) {
+      document.querySelector(".box").innerHTML =
+        "<h2>Quiz Finished 🎉</h2><h3>Your Score: " + score + "</h3>";
+    } else {
+      showQuestion();
+    }
+  }, 800);
+}
+
+loadCountries();
+</script>
+
+</body>
+</html>
