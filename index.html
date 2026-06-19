@@ -139,17 +139,62 @@ button{
 <script>
 
 // 🎮 DATA
-const easy=[
+const easy = [
 {q:"Capital of Pakistan?",a:"Islamabad",o:["Karachi","Lahore","Islamabad","Quetta"]},
-{q:"Capital of France?",a:"Paris",o:["Rome","Paris","Berlin","Madrid"]},
-{q:"Capital of Japan?",a:"Tokyo",o:["Tokyo","Seoul","Beijing","Bangkok"]}
+{q:"Capital of India?",a:"New Delhi",o:["Mumbai","Delhi","New Delhi","Kolkata"]},
+{q:"Capital of France?",a:"Paris",o:["Rome","Berlin","Paris","Madrid"]},
+{q:"Capital of UK?",a:"London",o:["London","Manchester","Liverpool","Birmingham"]},
+{q:"Capital of Japan?",a:"Tokyo",o:["Seoul","Tokyo","Beijing","Bangkok"]},
+
+{q:"Capital of USA?",a:"Washington D.C.",o:["New York","Los Angeles","Washington D.C.","Chicago"]},
+{q:"Capital of China?",a:"Beijing",o:["Shanghai","Beijing","Hong Kong","Shenzhen"]},
+{q:"Capital of Germany?",a:"Berlin",o:["Berlin","Munich","Hamburg","Frankfurt"]},
+{q:"Capital of Italy?",a:"Rome",o:["Milan","Venice","Rome","Naples"]},
+{q:"Capital of Spain?",a:"Madrid",o:["Barcelona","Madrid","Seville","Valencia"]},
+
+{q:"Capital of Canada?",a:"Ottawa",o:["Toronto","Vancouver","Ottawa","Montreal"]},
+{q:"Capital of Brazil?",a:"Brasilia",o:["Rio","Sao Paulo","Brasilia","Salvador"]},
+{q:"Capital of Russia?",a:"Moscow",o:["Moscow","Saint Petersburg","Kazan","Sochi"]},
+{q:"Capital of Turkey?",a:"Ankara",o:["Istanbul","Ankara","Izmir","Bursa"]},
+{q:"Capital of Australia?",a:"Canberra",o:["Sydney","Melbourne","Canberra","Perth"]},
+
+{q:"Capital of Saudi Arabia?",a:"Riyadh",o:["Jeddah","Makkah","Riyadh","Medina"]},
+{q:"Capital of UAE?",a:"Abu Dhabi",o:["Dubai","Abu Dhabi","Sharjah","Ajman"]},
+{q:"Capital of South Korea?",a:"Seoul",o:["Seoul","Busan","Incheon","Daegu"]},
+{q:"Capital of Egypt?",a:"Cairo",o:["Cairo","Alexandria","Giza","Luxor"]},
+{q:"Capital of South Africa?",a:"Pretoria",o:["Cape Town","Johannesburg","Pretoria","Durban"]}
 ];
 
-const hard=[
+const hard = [
 {q:"Capital of Switzerland?",a:"Bern",o:["Zurich","Geneva","Bern","Basel"]},
-{q:"Capital of Norway?",a:"Oslo",o:["Oslo","Bergen","Helsinki","Stockholm"]},
+{q:"Capital of Norway?",a:"Oslo",o:["Oslo","Bergen","Trondheim","Helsinki"]},
+{q:"Capital of Finland?",a:"Helsinki",o:["Helsinki","Oslo","Stockholm","Reykjavik"]},
+{q:"Capital of Iceland?",a:"Reykjavik",o:["Reykjavik","Oslo","Copenhagen","Dublin"]},
+{q:"Capital of Netherlands?",a:"Amsterdam",o:["Rotterdam","The Hague","Amsterdam","Utrecht"]},
+
+{q:"Capital of Belgium?",a:"Brussels",o:["Brussels","Antwerp","Ghent","Bruges"]},
+{q:"Capital of Austria?",a:"Vienna",o:["Vienna","Zurich","Prague","Munich"]},
+{q:"Capital of Czech Republic?",a:"Prague",o:["Prague","Vienna","Budapest","Warsaw"]},
+{q:"Capital of Hungary?",a:"Budapest",o:["Budapest","Prague","Warsaw","Vienna"]},
+{q:"Capital of Poland?",a:"Warsaw",o:["Warsaw","Krakow","Gdansk","Lodz"]},
+
+{q:"Capital of Greece?",a:"Athens",o:["Athens","Crete","Thessaloniki","Rhodes"]},
+{q:"Capital of Portugal?",a:"Lisbon",o:["Porto","Lisbon","Madrid","Seville"]},
+{q:"Capital of Ukraine?",a:"Kyiv",o:["Kyiv","Lviv","Odessa","Kharkiv"]},
 {q:"Capital of Kazakhstan?",a:"Astana",o:["Almaty","Astana","Tashkent","Bishkek"]},
-{q:"Capital of New Zealand?",a:"Wellington",o:["Auckland","Wellington","Sydney","Melbourne"]}
+{q:"Capital of Uzbekistan?",a:"Tashkent",o:["Samarkand","Tashkent","Bishkek","Dushanbe"]},
+
+{q:"Capital of Vietnam?",a:"Hanoi",o:["Ho Chi Minh City","Hanoi","Da Nang","Hue"]},
+{q:"Capital of Thailand?",a:"Bangkok",o:["Phuket","Chiang Mai","Bangkok","Pattaya"]},
+{q:"Capital of Philippines?",a:"Manila",o:["Cebu","Davao","Manila","Quezon City"]},
+{q:"Capital of Malaysia?",a:"Kuala Lumpur",o:["Penang","Kuala Lumpur","Johor","Ipoh"]},
+{q:"Capital of Indonesia?",a:"Jakarta",o:["Jakarta","Bali","Bandung","Surabaya"]},
+
+{q:"Capital of Argentina?",a:"Buenos Aires",o:["Buenos Aires","Cordoba","Rosario","Mendoza"]},
+{q:"Capital of Chile?",a:"Santiago",o:["Santiago","Valparaiso","Lima","Cusco"]},
+{q:"Capital of Peru?",a:"Lima",o:["Lima","Cusco","Arequipa","Quito"]},
+{q:"Capital of Colombia?",a:"Bogota",o:["Bogota","Medellin","Cali","Cartagena"]},
+{q:"Capital of Mexico?",a:"Mexico City",o:["Guadalajara","Cancun","Mexico City","Monterrey"]}
 ];
 
 let quiz=[];
