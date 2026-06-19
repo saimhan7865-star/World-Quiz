@@ -8,17 +8,29 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: radial-gradient(circle, #0b0f19, #000);
   color: white;
   text-align: center;
+
+  /* 🌍 Background Image */
+  background: url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+
+/* Dark overlay */
+.overlay {
+  background: rgba(0,0,0,0.75);
+  height: 100vh;
+  padding: 20px;
 }
 
 #lobby {
-  padding: 60px;
+  padding-top: 80px;
 }
 
 .btn {
-  padding: 14px 30px;
+  padding: 15px 30px;
   font-size: 18px;
   background: #22c55e;
   border: none;
@@ -28,7 +40,7 @@ body {
 }
 
 .card {
-  background: #111827;
+  background: rgba(17,24,39,0.95);
   max-width: 600px;
   margin: auto;
   padding: 20px;
@@ -59,22 +71,22 @@ button.option {
 #topbar {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
   font-size: 18px;
+  margin-bottom: 10px;
 }
 
-.rank {
+#creator {
+  margin-top: 10px;
   color: gold;
 }
 
-/* glow effect */
+/* glow */
 .glow {
-  animation: glow 0.5s;
+  animation: glow 0.4s;
 }
-
 @keyframes glow {
   0% { box-shadow: 0 0 0px #22c55e; }
-  50% { box-shadow: 0 0 25px #22c55e; }
+  50% { box-shadow: 0 0 30px #22c55e; }
   100% { box-shadow: 0 0 0px #22c55e; }
 }
 </style>
@@ -82,23 +94,26 @@ button.option {
 
 <body>
 
-<!-- 🔊 SOUND -->
+<!-- 🔊 SOUNDS -->
 <audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 <audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-<audio id="rankSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="startSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
 
+<div class="overlay">
+
+<!-- LOBBY -->
 <div id="lobby">
-  <h1>🎮 WORLD BATTLE QUIZ ULTIMATE</h1>
-  <p>🔥 PUBG Style Quiz (ACE Rank System)</p>
+  <h1>🎮 WORLD BATTLE QUIZ</h1>
+  <h3>Created by Saim</h3>
   <button class="btn" onclick="startGame()">START MATCH</button>
 </div>
 
+<!-- GAME -->
 <div id="game" style="display:none;">
 
   <div id="topbar">
     <div>❤️ Lives: <span id="lives">3</span></div>
     <div>🏆 Score: <span id="score">0</span></div>
-    <div class="rank">🎖 Rank: <span id="rank">Bronze</span></div>
   </div>
 
   <div class="card" id="card">
@@ -108,7 +123,11 @@ button.option {
 
     <div id="options"></div>
 
+    <div id="creator">👑 Created by Saim</div>
   </div>
+
+</div>
+
 </div>
 
 <script>
@@ -118,7 +137,7 @@ let score = 0;
 let lives = 3;
 let answer = "";
 
-// 🌍 load data
+// 🌍 load API
 async function loadData(){
   let res = await fetch("https://restcountries.com/v3.1/all");
   let data = await res.json();
@@ -134,6 +153,8 @@ async function loadData(){
 function startGame(){
   document.getElementById("lobby").style.display = "none";
   document.getElementById("game").style.display = "block";
+
+  document.getElementById("startSound").play();
 
   loadData().then(()=>{
     countries = shuffle(countries);
@@ -173,10 +194,7 @@ function showQ(){
   }
 
   while(options.length < 4){
-    let r = Math.random() > 0.5
-      ? countries[Math.floor(Math.random()*countries.length)].capital
-      : countries[Math.floor(Math.random()*countries.length)].name;
-
+    let r = countries[Math.floor(Math.random()*countries.length)].name;
     if(!options.includes(r)) options.push(r);
   }
 
@@ -195,19 +213,17 @@ function check(btn){
   if(btn.innerText === answer){
     btn.classList.add("correct");
     score++;
-    playSound("correctSound");
+    document.getElementById("correctSound").play();
     document.getElementById("card").classList.add("glow");
-    setTimeout(()=>document.getElementById("card").classList.remove("glow"),500);
+    setTimeout(()=>document.getElementById("card").classList.remove("glow"),400);
   } else {
     btn.classList.add("wrong");
     lives--;
-    playSound("wrongSound");
+    document.getElementById("wrongSound").play();
   }
 
   document.getElementById("score").innerText = score;
   document.getElementById("lives").innerText = lives;
-
-  updateRank();
 
   setTimeout(next, 600);
 }
@@ -223,35 +239,12 @@ function next(){
   }
 }
 
-// 🎖 rank system
-function updateRank(){
-  let r = "Bronze";
-
-  if(score >= 5) r = "Silver";
-  if(score >= 10) r = "Gold";
-  if(score >= 15) r = "Platinum";
-  if(score >= 25) r = "Diamond";
-  if(score >= 40) {
-    r = "ACE";
-    playSound("rankSound");
-  }
-
-  document.getElementById("rank").innerText = r;
-}
-
-// 🔊 sound
-function playSound(id){
-  let s = document.getElementById(id);
-  s.currentTime = 0;
-  s.play();
-}
-
 // ☠ game over
 function gameOver(){
   document.getElementById("game").innerHTML = `
     <h1>☠ GAME OVER</h1>
     <h2>Score: ${score}</h2>
-    <h2>Rank: ${document.getElementById("rank").innerText}</h2>
+    <h3>Created by Saim 👑</h3>
     <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
   `;
 }
