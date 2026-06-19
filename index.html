@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PUBG Quiz 10.0 Ultimate</title>
+<title>PUBG Quiz 10.1</title>
 
 <style>
 body{
@@ -26,7 +26,6 @@ body{
   background:#111827;
   padding:20px;
   border-radius:12px;
-  box-shadow:0 0 25px #22c55e;
 }
 
 button{
@@ -43,12 +42,12 @@ button{
 
 .correct{background:#22c55e!important;}
 .wrong{background:#ef4444!important;}
+.showCorrect{background:#22c55e!important; border:2px solid #fff;}
 
 .btn{
   background:#22c55e;
   padding:12px;
   border-radius:10px;
-  cursor:pointer;
   border:none;
   color:white;
 }
@@ -56,7 +55,6 @@ button{
 #top{
   display:flex;
   justify-content:space-around;
-  margin-bottom:10px;
 }
 
 .rank{color:gold;}
@@ -65,22 +63,23 @@ button{
 
 <body>
 
-<!-- 🔊 SOUNDS -->
+<!-- 🔊 SOUND -->
 <audio id="ok" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
 <audio id="bad" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-<audio id="win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
 
 <div class="overlay">
 
-<!-- LOBBY -->
 <div id="lobby">
-  <h1>🎮 PUBG QUIZ 10.0</h1>
-  <h3>Created by Saim 👑</h3>
+  <h1>🎮 PUBG QUIZ 10.1</h1>
 
-  <button class="btn" onclick="start()">START MATCH</button>
+  <h3>Mode Select</h3>
+
+  <button class="btn" onclick="start('easy')">EASY</button>
+  <button class="btn" onclick="start('hard')">HARD</button>
+
+  <p>Created by Saim 👑</p>
 </div>
 
-<!-- GAME -->
 <div id="game" style="display:none;">
 
   <div class="card">
@@ -90,8 +89,6 @@ button{
       <div>🏆 <span id="score">0</span></div>
       <div class="rank">🎖 <span id="rank">Bronze</span></div>
     </div>
-
-    <div id="timer">⏱ 10</div>
 
     <div id="q">Loading...</div>
     <div id="options"></div>
@@ -104,51 +101,35 @@ button{
 
 <script>
 
-// 🎮 FULL OFFLINE 195 STYLE DATA
-const quiz=[
+// 🎮 DATA (EASY + HARD)
+const easy=[
 {q:"Capital of Pakistan?",a:"Islamabad",o:["Karachi","Lahore","Islamabad","Quetta"]},
-{q:"Capital of India?",a:"New Delhi",o:["Mumbai","Chennai","New Delhi","Kolkata"]},
-{q:"Capital of USA?",a:"Washington D.C.",o:["New York","LA","Washington D.C.","Chicago"]},
-{q:"Capital of UK?",a:"London",o:["London","Manchester","Liverpool","Birmingham"]},
-{q:"Capital of France?",a:"Paris",o:["Rome","Berlin","Paris","Madrid"]},
-{q:"Capital of Japan?",a:"Tokyo",o:["Seoul","Tokyo","Beijing","Bangkok"]},
-{q:"Capital of China?",a:"Beijing",o:["Shanghai","Beijing","Hong Kong","Shenzhen"]},
-{q:"Capital of Germany?",a:"Berlin",o:["Berlin","Munich","Hamburg","Frankfurt"]},
-{q:"Capital of Brazil?",a:"Brasilia",o:["Rio","Sao Paulo","Brasilia","Salvador"]},
-{q:"Capital of Turkey?",a:"Ankara",o:["Istanbul","Ankara","Izmir","Bursa"]}
+{q:"Capital of France?",a:"Paris",o:["Rome","Paris","Berlin","Madrid"]},
+{q:"Capital of Japan?",a:"Tokyo",o:["Tokyo","Seoul","Beijing","Bangkok"]}
 ];
 
-let i=0,score=0,lives=3,streak=0,answer="";
-let timer;
-let time=10;
+const hard=[
+{q:"Capital of Switzerland?",a:"Bern",o:["Zurich","Geneva","Bern","Basel"]},
+{q:"Capital of Kazakhstan?",a:"Astana",o:["Almaty","Astana","Tashkent","Bishkek"]},
+{q:"Capital of New Zealand?",a:"Wellington",o:["Auckland","Wellington","Sydney","Melbourne"]}
+];
+
+let quiz=[];
+let i=0,score=0,lives=3,answer="",mode="easy";
 
 // ▶ start
-function start(){
+function start(m){
+  mode=m;
+  quiz=(m==="easy")?easy:hard;
+
   document.getElementById("lobby").style.display="none";
   document.getElementById("game").style.display="block";
+
   showQ();
-}
-
-// ⏱ timer
-function startTimer(){
-  clearInterval(timer);
-  time=10;
-
-  timer=setInterval(()=>{
-    document.getElementById("timer").innerText="⏱ "+time;
-    time--;
-
-    if(time<0){
-      clearInterval(timer);
-      next();
-    }
-  },1000);
 }
 
 // ❓ question
 function showQ(){
-  startTimer();
-
   let q=quiz[i];
   answer=q.a;
 
@@ -166,22 +147,28 @@ function showQ(){
 
 // ✔ check
 function check(btn){
+  let buttons=document.querySelectorAll("button");
+
   if(btn.innerText===answer){
     btn.classList.add("correct");
-    score++;
-    streak++;
     document.getElementById("ok").play();
-
-    if(streak>=3){
-      score++; // bonus point
-      document.getElementById("win").play();
-    }
-
+    score++;
   }else{
     btn.classList.add("wrong");
-    lives--;
-    streak=0;
     document.getElementById("bad").play();
+    lives--;
+
+    // 📳 vibration (mobile)
+    if(navigator.vibrate){
+      navigator.vibrate(400);
+    }
+
+    // ✅ show correct answer
+    buttons.forEach(b=>{
+      if(b.innerText===answer){
+        b.classList.add("showCorrect");
+      }
+    });
   }
 
   document.getElementById("score").innerText=score;
@@ -189,18 +176,18 @@ function check(btn){
 
   updateRank();
 
-  setTimeout(next,500);
+  setTimeout(next,800);
 }
 
-// 🎖 rank system
+// 🎖 rank
 function updateRank(){
   let r="Bronze";
 
-  if(score>=3) r="Silver";
-  if(score>=6) r="Gold";
-  if(score>=9) r="Platinum";
-  if(score>=12) r="Diamond";
-  if(score>=15) r="ACE";
+  if(score>=2) r="Silver";
+  if(score>=4) r="Gold";
+  if(score>=6) r="Platinum";
+  if(score>=8) r="Diamond";
+  if(score>=10) r="ACE";
 
   document.getElementById("rank").innerText=r;
 }
@@ -221,11 +208,10 @@ function end(){
   document.getElementById("game").innerHTML=`
     <h1>☠ GAME OVER</h1>
     <h2>Score: ${score}</h2>
+    <h3>Mode: ${mode.toUpperCase()}</h3>
     <h3>Rank: ${document.getElementById("rank").innerText}</h3>
     <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
   `;
-
-  document.getElementById("win").play();
 }
 </script>
 
