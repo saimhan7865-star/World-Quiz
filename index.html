@@ -2,128 +2,100 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>World Battle Quiz Ultimate</title>
+<title>PUBG Quiz 10.0 Ultimate</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  color: white;
-  text-align: center;
-
-  /* 🌍 Background Image */
-  background: url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80");
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
+body{
+  margin:0;
+  font-family:Arial;
+  color:white;
+  text-align:center;
+  background:url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80");
+  background-size:cover;
 }
 
-/* Dark overlay */
-.overlay {
-  background: rgba(0,0,0,0.75);
-  height: 100vh;
-  padding: 20px;
+.overlay{
+  background:rgba(0,0,0,0.85);
+  min-height:100vh;
+  padding:20px;
 }
 
-#lobby {
-  padding-top: 80px;
+.card{
+  max-width:600px;
+  margin:auto;
+  background:#111827;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 0 25px #22c55e;
 }
 
-.btn {
-  padding: 15px 30px;
-  font-size: 18px;
-  background: #22c55e;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
+button{
+  width:100%;
+  margin:6px 0;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#374151;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
 
-.card {
-  background: rgba(17,24,39,0.95);
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #22c55e;
+.correct{background:#22c55e!important;}
+.wrong{background:#ef4444!important;}
+
+.btn{
+  background:#22c55e;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+  border:none;
+  color:white;
 }
 
-img {
-  width: 130px;
-  margin: 10px;
-  border: 2px solid white;
+#top{
+  display:flex;
+  justify-content:space-around;
+  margin-bottom:10px;
 }
 
-button.option {
-  width: 100%;
-  margin: 6px 0;
-  padding: 12px;
-  background: #374151;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.correct { background: #22c55e !important; }
-.wrong { background: #ef4444 !important; }
-
-#topbar {
-  display: flex;
-  justify-content: space-around;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-#creator {
-  margin-top: 10px;
-  color: gold;
-}
-
-/* glow */
-.glow {
-  animation: glow 0.4s;
-}
-@keyframes glow {
-  0% { box-shadow: 0 0 0px #22c55e; }
-  50% { box-shadow: 0 0 30px #22c55e; }
-  100% { box-shadow: 0 0 0px #22c55e; }
-}
+.rank{color:gold;}
 </style>
 </head>
 
 <body>
 
 <!-- 🔊 SOUNDS -->
-<audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
-<audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-<audio id="startSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+<audio id="ok" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+<audio id="bad" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+<audio id="win" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
 
 <div class="overlay">
 
 <!-- LOBBY -->
 <div id="lobby">
-  <h1>🎮 WORLD BATTLE QUIZ</h1>
-  <h3>Created by Saim</h3>
-  <button class="btn" onclick="startGame()">START MATCH</button>
+  <h1>🎮 PUBG QUIZ 10.0</h1>
+  <h3>Created by Saim 👑</h3>
+
+  <button class="btn" onclick="start()">START MATCH</button>
 </div>
 
 <!-- GAME -->
 <div id="game" style="display:none;">
 
-  <div id="topbar">
-    <div>❤️ Lives: <span id="lives">3</span></div>
-    <div>🏆 Score: <span id="score">0</span></div>
-  </div>
+  <div class="card">
 
-  <div class="card" id="card">
+    <div id="top">
+      <div>❤️ <span id="lives">3</span></div>
+      <div>🏆 <span id="score">0</span></div>
+      <div class="rank">🎖 <span id="rank">Bronze</span></div>
+    </div>
 
-    <div id="question">Loading...</div>
-    <img id="flag" style="display:none;" />
+    <div id="timer">⏱ 10</div>
 
+    <div id="q">Loading...</div>
     <div id="options"></div>
 
-    <div id="creator">👑 Created by Saim</div>
   </div>
 
 </div>
@@ -131,122 +103,129 @@ button.option {
 </div>
 
 <script>
-let countries = [];
-let index = 0;
-let score = 0;
-let lives = 3;
-let answer = "";
 
-// 🌍 load API
-async function loadData(){
-  let res = await fetch("https://restcountries.com/v3.1/all");
-  let data = await res.json();
+// 🎮 FULL OFFLINE 195 STYLE DATA
+const quiz=[
+{q:"Capital of Pakistan?",a:"Islamabad",o:["Karachi","Lahore","Islamabad","Quetta"]},
+{q:"Capital of India?",a:"New Delhi",o:["Mumbai","Chennai","New Delhi","Kolkata"]},
+{q:"Capital of USA?",a:"Washington D.C.",o:["New York","LA","Washington D.C.","Chicago"]},
+{q:"Capital of UK?",a:"London",o:["London","Manchester","Liverpool","Birmingham"]},
+{q:"Capital of France?",a:"Paris",o:["Rome","Berlin","Paris","Madrid"]},
+{q:"Capital of Japan?",a:"Tokyo",o:["Seoul","Tokyo","Beijing","Bangkok"]},
+{q:"Capital of China?",a:"Beijing",o:["Shanghai","Beijing","Hong Kong","Shenzhen"]},
+{q:"Capital of Germany?",a:"Berlin",o:["Berlin","Munich","Hamburg","Frankfurt"]},
+{q:"Capital of Brazil?",a:"Brasilia",o:["Rio","Sao Paulo","Brasilia","Salvador"]},
+{q:"Capital of Turkey?",a:"Ankara",o:["Istanbul","Ankara","Izmir","Bursa"]}
+];
 
-  countries = data.map(c => ({
-    name: c.name.common,
-    capital: c.capital ? c.capital[0] : "N/A",
-    flag: c.flags.png
-  }));
-}
+let i=0,score=0,lives=3,streak=0,answer="";
+let timer;
+let time=10;
 
 // ▶ start
-function startGame(){
-  document.getElementById("lobby").style.display = "none";
-  document.getElementById("game").style.display = "block";
-
-  document.getElementById("startSound").play();
-
-  loadData().then(()=>{
-    countries = shuffle(countries);
-    showQ();
-  });
+function start(){
+  document.getElementById("lobby").style.display="none";
+  document.getElementById("game").style.display="block";
+  showQ();
 }
 
-// 🔀 shuffle
-function shuffle(a){
-  return a.sort(()=>Math.random()-0.5);
+// ⏱ timer
+function startTimer(){
+  clearInterval(timer);
+  time=10;
+
+  timer=setInterval(()=>{
+    document.getElementById("timer").innerText="⏱ "+time;
+    time--;
+
+    if(time<0){
+      clearInterval(timer);
+      next();
+    }
+  },1000);
 }
 
 // ❓ question
 function showQ(){
-  let c = countries[index];
-  let type = Math.random() > 0.5 ? "capital" : "flag";
+  startTimer();
 
-  let options = [];
+  let q=quiz[i];
+  answer=q.a;
 
-  if(type === "capital"){
-    document.getElementById("flag").style.display = "none";
-    document.getElementById("question").innerText =
-      "🏙 Capital of " + c.name;
+  let opts=q.o.sort(()=>Math.random()-0.5);
 
-    answer = c.capital;
-    options.push(c.capital);
+  document.getElementById("q").innerText="❓ "+q.q;
 
-  } else {
-    document.getElementById("flag").style.display = "block";
-    document.getElementById("flag").src = c.flag;
-
-    document.getElementById("question").innerText =
-      "🏳 Which country is this flag?";
-
-    answer = c.name;
-    options.push(c.name);
-  }
-
-  while(options.length < 4){
-    let r = countries[Math.floor(Math.random()*countries.length)].name;
-    if(!options.includes(r)) options.push(r);
-  }
-
-  options = shuffle(options);
-
-  let html = "";
-  options.forEach(o=>{
-    html += `<button class="option" onclick="check(this)">${o}</button>`;
+  let html="";
+  opts.forEach(o=>{
+    html+=`<button onclick="check(this)">${o}</button>`;
   });
 
-  document.getElementById("options").innerHTML = html;
+  document.getElementById("options").innerHTML=html;
 }
 
 // ✔ check
 function check(btn){
-  if(btn.innerText === answer){
+  if(btn.innerText===answer){
     btn.classList.add("correct");
     score++;
-    document.getElementById("correctSound").play();
-    document.getElementById("card").classList.add("glow");
-    setTimeout(()=>document.getElementById("card").classList.remove("glow"),400);
-  } else {
+    streak++;
+    document.getElementById("ok").play();
+
+    if(streak>=3){
+      score++; // bonus point
+      document.getElementById("win").play();
+    }
+
+  }else{
     btn.classList.add("wrong");
     lives--;
-    document.getElementById("wrongSound").play();
+    streak=0;
+    document.getElementById("bad").play();
   }
 
-  document.getElementById("score").innerText = score;
-  document.getElementById("lives").innerText = lives;
+  document.getElementById("score").innerText=score;
+  document.getElementById("lives").innerText=lives;
 
-  setTimeout(next, 600);
+  updateRank();
+
+  setTimeout(next,500);
+}
+
+// 🎖 rank system
+function updateRank(){
+  let r="Bronze";
+
+  if(score>=3) r="Silver";
+  if(score>=6) r="Gold";
+  if(score>=9) r="Platinum";
+  if(score>=12) r="Diamond";
+  if(score>=15) r="ACE";
+
+  document.getElementById("rank").innerText=r;
 }
 
 // ➡ next
 function next(){
-  index++;
+  i++;
 
-  if(lives <= 0){
-    gameOver();
-  } else {
+  if(lives<=0 || i>=quiz.length){
+    end();
+  }else{
     showQ();
   }
 }
 
-// ☠ game over
-function gameOver(){
-  document.getElementById("game").innerHTML = `
+// ☠ end
+function end(){
+  document.getElementById("game").innerHTML=`
     <h1>☠ GAME OVER</h1>
     <h2>Score: ${score}</h2>
-    <h3>Created by Saim 👑</h3>
+    <h3>Rank: ${document.getElementById("rank").innerText}</h3>
     <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
   `;
+
+  document.getElementById("win").play();
 }
 </script>
 
