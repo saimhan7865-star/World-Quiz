@@ -2,59 +2,87 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>PUBG Quiz 10.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUBG Quiz 11.0 Ultra</title>
 
 <style>
+*{box-sizing:border-box;}
+
 body{
   margin:0;
   font-family:Arial;
-  color:white;
-  text-align:center;
   background:url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1400&q=80");
   background-size:cover;
+  color:white;
+  overflow:hidden;
 }
 
+/* FULL SCREEN FIX */
 .overlay{
-  background:rgba(0,0,0,0.85);
-  min-height:100vh;
-  padding:20px;
+  background:rgba(0,0,0,0.88);
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
 }
 
 .card{
-  max-width:600px;
-  margin:auto;
+  width:100%;
+  max-width:500px;
+  height:95vh;
   background:#111827;
-  padding:20px;
-  border-radius:12px;
+  border-radius:15px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:0 0 25px #22c55e;
 }
 
+/* TOP BAR */
+#top{
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
+}
+
+/* QUESTION */
+#q{
+  font-size:22px;
+  margin:10px 0;
+}
+
+/* OPTIONS BIG FOR MOBILE */
 button{
   width:100%;
-  margin:6px 0;
-  padding:12px;
+  padding:18px;
+  margin:8px 0;
   border:none;
-  border-radius:8px;
+  border-radius:12px;
   background:#374151;
   color:white;
-  font-size:16px;
+  font-size:18px;
   cursor:pointer;
 }
 
 .correct{background:#22c55e!important;}
 .wrong{background:#ef4444!important;}
-.showCorrect{background:#22c55e!important; border:2px solid #fff;}
+.showCorrect{background:#22c55e!important; border:2px solid white;}
 
 .btn{
   background:#22c55e;
-  padding:12px;
-  border-radius:10px;
+  padding:15px;
+  border-radius:12px;
   border:none;
   color:white;
+  font-size:18px;
 }
 
-#top{
-  display:flex;
-  justify-content:space-around;
+/* LOBBY CENTER */
+.center{
+  text-align:center;
 }
 
 .rank{color:gold;}
@@ -69,18 +97,20 @@ button{
 
 <div class="overlay">
 
-<div id="lobby">
-  <h1>🎮 PUBG QUIZ 10.1</h1>
+<!-- LOBBY -->
+<div id="lobby" class="center">
+  <h1>🎮 PUBG QUIZ 11.0 ULTRA</h1>
 
-  <h3>Mode Select</h3>
+  <p>Select Mode</p>
 
   <button class="btn" onclick="start('easy')">EASY</button>
   <button class="btn" onclick="start('hard')">HARD</button>
 
-  <p>Created by Saim 👑</p>
+  <h4>Created by Saim 👑</h4>
 </div>
 
-<div id="game" style="display:none;">
+<!-- GAME -->
+<div id="game" style="display:none; width:100%;">
 
   <div class="card">
 
@@ -101,7 +131,7 @@ button{
 
 <script>
 
-// 🎮 DATA (EASY + HARD)
+// 🎮 DATA
 const easy=[
 {q:"Capital of Pakistan?",a:"Islamabad",o:["Karachi","Lahore","Islamabad","Quetta"]},
 {q:"Capital of France?",a:"Paris",o:["Rome","Paris","Berlin","Madrid"]},
@@ -111,7 +141,8 @@ const easy=[
 const hard=[
 {q:"Capital of Switzerland?",a:"Bern",o:["Zurich","Geneva","Bern","Basel"]},
 {q:"Capital of Kazakhstan?",a:"Astana",o:["Almaty","Astana","Tashkent","Bishkek"]},
-{q:"Capital of New Zealand?",a:"Wellington",o:["Auckland","Wellington","Sydney","Melbourne"]}
+{q:"Capital of New Zealand?",a:"Wellington",o:["Auckland","Wellington","Sydney","Melbourne"]},
+{q:"Capital of Norway?",a:"Oslo",o:["Oslo","Bergen","Stockholm","Helsinki"]}
 ];
 
 let quiz=[];
@@ -158,9 +189,9 @@ function check(btn){
     document.getElementById("bad").play();
     lives--;
 
-    // 📳 vibration (mobile)
+    // 📳 vibration
     if(navigator.vibrate){
-      navigator.vibrate(400);
+      navigator.vibrate(300);
     }
 
     // ✅ show correct answer
@@ -176,7 +207,7 @@ function check(btn){
 
   updateRank();
 
-  setTimeout(next,800);
+  setTimeout(next,900);
 }
 
 // 🎖 rank
@@ -206,11 +237,13 @@ function next(){
 // ☠ end
 function end(){
   document.getElementById("game").innerHTML=`
-    <h1>☠ GAME OVER</h1>
-    <h2>Score: ${score}</h2>
-    <h3>Mode: ${mode.toUpperCase()}</h3>
-    <h3>Rank: ${document.getElementById("rank").innerText}</h3>
-    <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+    <div class="center">
+      <h1>☠ GAME OVER</h1>
+      <h2>Score: ${score}</h2>
+      <h3>Mode: ${mode.toUpperCase()}</h3>
+      <h3>Rank: ${document.getElementById("rank").innerText}</h3>
+      <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
   `;
 }
 </script>
