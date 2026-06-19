@@ -1,66 +1,125 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>World Flags & Capitals Quiz Pro</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #f4f4f4;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<title>World Battle Quiz Ultimate</title>
 
-    .box {
-      background: white;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-      border-radius: 12px;
-      box-shadow: 0 0 10px gray;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle, #0b0f19, #000);
+  color: white;
+  text-align: center;
+}
 
-    img {
-      width: 120px;
-      margin: 10px;
-    }
+#lobby {
+  padding: 60px;
+}
 
-    button {
-      display: block;
-      width: 90%;
-      margin: 8px auto;
-      padding: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: 6px;
-      background: #eee;
-    }
+.btn {
+  padding: 14px 30px;
+  font-size: 18px;
+  background: #22c55e;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+}
 
-    button:hover {
-      background: #ddd;
-    }
+.card {
+  background: #111827;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #22c55e;
+}
 
-    .correct { background: green; color: white; }
-    .wrong { background: red; color: white; }
-  </style>
+img {
+  width: 130px;
+  margin: 10px;
+  border: 2px solid white;
+}
+
+button.option {
+  width: 100%;
+  margin: 6px 0;
+  padding: 12px;
+  background: #374151;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.correct { background: #22c55e !important; }
+.wrong { background: #ef4444 !important; }
+
+#topbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.rank {
+  color: gold;
+}
+
+/* glow effect */
+.glow {
+  animation: glow 0.5s;
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 0px #22c55e; }
+  50% { box-shadow: 0 0 25px #22c55e; }
+  100% { box-shadow: 0 0 0px #22c55e; }
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-  <h2 id="question">Loading...</h2>
-  <img id="flag" style="display:none;" />
-  <div id="options"></div>
-  <h3>Score: <span id="score">0</span></h3>
+<!-- 🔊 SOUND -->
+<audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
+<audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+<audio id="rankSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+<div id="lobby">
+  <h1>🎮 WORLD BATTLE QUIZ ULTIMATE</h1>
+  <p>🔥 PUBG Style Quiz (ACE Rank System)</p>
+  <button class="btn" onclick="startGame()">START MATCH</button>
+</div>
+
+<div id="game" style="display:none;">
+
+  <div id="topbar">
+    <div>❤️ Lives: <span id="lives">3</span></div>
+    <div>🏆 Score: <span id="score">0</span></div>
+    <div class="rank">🎖 Rank: <span id="rank">Bronze</span></div>
+  </div>
+
+  <div class="card" id="card">
+
+    <div id="question">Loading...</div>
+    <img id="flag" style="display:none;" />
+
+    <div id="options"></div>
+
+  </div>
 </div>
 
 <script>
 let countries = [];
 let index = 0;
 let score = 0;
-let currentAnswer = "";
+let lives = 3;
+let answer = "";
 
-// 🌍 Load 195 countries from API
-async function loadCountries() {
+// 🌍 load data
+async function loadData(){
   let res = await fetch("https://restcountries.com/v3.1/all");
   let data = await res.json();
 
@@ -69,83 +128,133 @@ async function loadCountries() {
     capital: c.capital ? c.capital[0] : "N/A",
     flag: c.flags.png
   }));
-
-  startQuiz();
 }
 
-function startQuiz() {
-  countries = countries.sort(() => Math.random() - 0.5);
-  showQuestion();
+// ▶ start
+function startGame(){
+  document.getElementById("lobby").style.display = "none";
+  document.getElementById("game").style.display = "block";
+
+  loadData().then(()=>{
+    countries = shuffle(countries);
+    showQ();
+  });
 }
 
-function showQuestion() {
-  let qType = Math.random() > 0.5 ? "capital" : "flag";
-  let country = countries[index];
+// 🔀 shuffle
+function shuffle(a){
+  return a.sort(()=>Math.random()-0.5);
+}
+
+// ❓ question
+function showQ(){
+  let c = countries[index];
+  let type = Math.random() > 0.5 ? "capital" : "flag";
 
   let options = [];
 
-  if (qType === "capital") {
+  if(type === "capital"){
     document.getElementById("flag").style.display = "none";
     document.getElementById("question").innerText =
-      "What is the capital of " + country.name + "?";
+      "🏙 Capital of " + c.name;
 
-    currentAnswer = country.capital;
+    answer = c.capital;
+    options.push(c.capital);
 
-    options.push(country.capital);
-
-    while (options.length < 4) {
-      let random = countries[Math.floor(Math.random() * countries.length)].capital;
-      if (!options.includes(random)) options.push(random);
-    }
   } else {
     document.getElementById("flag").style.display = "block";
-    document.getElementById("flag").src = country.flag;
+    document.getElementById("flag").src = c.flag;
 
     document.getElementById("question").innerText =
-      "Which country does this flag belong to?";
+      "🏳 Which country is this flag?";
 
-    currentAnswer = country.name;
-
-    options.push(country.name);
-
-    while (options.length < 4) {
-      let random = countries[Math.floor(Math.random() * countries.length)].name;
-      if (!options.includes(random)) options.push(random);
-    }
+    answer = c.name;
+    options.push(c.name);
   }
 
-  options = options.sort(() => Math.random() - 0.5);
+  while(options.length < 4){
+    let r = Math.random() > 0.5
+      ? countries[Math.floor(Math.random()*countries.length)].capital
+      : countries[Math.floor(Math.random()*countries.length)].name;
+
+    if(!options.includes(r)) options.push(r);
+  }
+
+  options = shuffle(options);
 
   let html = "";
-  options.forEach(opt => {
-    html += `<button onclick="check(this)">${opt}</button>`;
+  options.forEach(o=>{
+    html += `<button class="option" onclick="check(this)">${o}</button>`;
   });
 
   document.getElementById("options").innerHTML = html;
 }
 
-function check(btn) {
-  if (btn.innerText === currentAnswer) {
+// ✔ check
+function check(btn){
+  if(btn.innerText === answer){
     btn.classList.add("correct");
     score++;
+    playSound("correctSound");
+    document.getElementById("card").classList.add("glow");
+    setTimeout(()=>document.getElementById("card").classList.remove("glow"),500);
   } else {
     btn.classList.add("wrong");
+    lives--;
+    playSound("wrongSound");
   }
 
   document.getElementById("score").innerText = score;
+  document.getElementById("lives").innerText = lives;
 
-  setTimeout(() => {
-    index++;
-    if (index >= countries.length) {
-      document.querySelector(".box").innerHTML =
-        "<h2>Quiz Finished 🎉</h2><h3>Your Score: " + score + "</h3>";
-    } else {
-      showQuestion();
-    }
-  }, 800);
+  updateRank();
+
+  setTimeout(next, 600);
 }
 
-loadCountries();
+// ➡ next
+function next(){
+  index++;
+
+  if(lives <= 0){
+    gameOver();
+  } else {
+    showQ();
+  }
+}
+
+// 🎖 rank system
+function updateRank(){
+  let r = "Bronze";
+
+  if(score >= 5) r = "Silver";
+  if(score >= 10) r = "Gold";
+  if(score >= 15) r = "Platinum";
+  if(score >= 25) r = "Diamond";
+  if(score >= 40) {
+    r = "ACE";
+    playSound("rankSound");
+  }
+
+  document.getElementById("rank").innerText = r;
+}
+
+// 🔊 sound
+function playSound(id){
+  let s = document.getElementById(id);
+  s.currentTime = 0;
+  s.play();
+}
+
+// ☠ game over
+function gameOver(){
+  document.getElementById("game").innerHTML = `
+    <h1>☠ GAME OVER</h1>
+    <h2>Score: ${score}</h2>
+    <h2>Rank: ${document.getElementById("rank").innerText}</h2>
+    <button class="btn" onclick="location.reload()">PLAY AGAIN</button>
+  `;
+}
 </script>
 
 </body>
