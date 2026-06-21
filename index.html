@@ -239,47 +239,34 @@ function showQ(){
 
 // ✔ check answer
 function check(btn){
-  let buttons=document.querySelectorAll("button");
+  let buttons=document.querySelectorAll("#options button");
 
- if(btn.innerText===answer){
+  if(btn.innerText===answer){
 
-  btn.classList.add("correct");
-  btn.innerHTML = "✅ " + btn.innerText;
+    btn.classList.add("correct");
+    btn.innerHTML="✅ "+btn.innerText;
 
-  score++;
-document.getElementById("ok").play();
-  document.getElementById("q").innerHTML =
-  "🎉 Congratulations! Correct Answer";
+    score++;
 
-}else{
+    document.getElementById("ok").play();
 
-  btn.classList.add("wrong");
-  btn.innerHTML = "❌ " + btn.innerText;
-document.getElementById("bad").play();
-  document.getElementById("q").innerHTML =
-  "😢 Wrong Answer";
+    document.getElementById("q").innerHTML =
+    "🎉 Congratulations! Correct Answer";
 
-  if(navigator.vibrate){
-    navigator.vibrate(300);
-  }
+  }else{
 
-  buttons.forEach(b=>{
-    if(b.innerText===answer){
-      b.classList.add("showCorrect");
-    }
-  });
-}
- btn.innerHTML = "❌ " + btn.innerText;
+    btn.classList.add("wrong");
+    btn.innerHTML="❌ "+btn.innerText;
 
-document.getElementById("q").innerHTML =
-"😢 Wrong Answer";
+    document.getElementById("bad").play();
 
-    // 📳 vibration
+    document.getElementById("q").innerHTML =
+    "😢 Wrong Answer";
+
     if(navigator.vibrate){
       navigator.vibrate(300);
     }
 
-    // ✅ show correct answer
     buttons.forEach(b=>{
       if(b.innerText===answer){
         b.classList.add("showCorrect");
@@ -288,11 +275,17 @@ document.getElementById("q").innerHTML =
   }
 
   document.getElementById("score").innerText=score;
-if(score > highScore){
-  highScore = score;
-  localStorage.setItem("highScore", highScore);
-  document.getElementById("highScore").innerText = highScore;
-  document.getElementById("homeHighScore").innerText = highScore;
+
+  if(score > highScore){
+    highScore = score;
+    localStorage.setItem("highScore", highScore);
+    document.getElementById("highScore").innerText = highScore;
+    document.getElementById("homeHighScore").innerText = highScore;
+  }
+
+  updateRank();
+
+  setTimeout(next,900);
 }
   updateRank();
 
