@@ -123,6 +123,7 @@ button{
     <div id="top">
       <div>🏆 <span id="score">0</span></div>
       <div class="rank">🎖 <span id="rank">Bronze</span></div>
+      <div>⭐ <span id="highScore">0</span></div>
     </div>
 
     <div id="q">Loading...</div>
@@ -197,7 +198,7 @@ const hard = [
 
 let quiz=[];
 let i=0,score=0,answer="",mode="easy";
-
+let highScore = localStorage.getItem("highScore") || 0;
 // ▶ start game
 function start(m){
   mode=m;
@@ -205,7 +206,7 @@ function start(m){
 
   document.getElementById("lobby").style.display="none";
   document.getElementById("game").style.display="block";
-
+document.getElementById("highScore").innerText = highScore;
   showQ();
 }
 
@@ -252,7 +253,11 @@ function check(btn){
   }
 
   document.getElementById("score").innerText=score;
-
+if(score > highScore){
+  highScore = score;
+  localStorage.setItem("highScore", highScore);
+  document.getElementById("highScore").innerText = highScore;
+}
   updateRank();
 
   setTimeout(next,900);
