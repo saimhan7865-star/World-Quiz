@@ -134,7 +134,7 @@ button{
 </div>
 
 </div>
-
+<button class="backBtn" onclick="goBack()">⬅ Back</button>
 <script>
 
 // 🎮 DATA
@@ -199,7 +199,13 @@ const hard = [
 let quiz=[];
 let i=0,score=0,answer="",mode="easy";
 let highScore = localStorage.getItem("highScore") || 0;
+
+window.onload = function(){
   document.getElementById("homeHighScore").innerText = highScore;
+};
+  function goBack(){
+  window.location.href="https://saimhan7865-star.github.io/My-Websites/";
+}
 // ▶ start game
 function start(m){
   mode=m;
