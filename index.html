@@ -205,8 +205,9 @@ let highScore = localStorage.getItem("highScore") || 0;
 window.onload = function(){
   document.getElementById("homeHighScore").innerText = highScore;
 };
-  function goBack(){
-  window.location.href="https://saimhan7865-star.github.io/My-Websites/";
+function goBack(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("lobby").style.display="block";
 }
 // ▶ start game
 function start(m){
