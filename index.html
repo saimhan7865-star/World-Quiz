@@ -121,7 +121,6 @@ button{
 
 
     <div id="top">
-      <div>❤️ <span id="lives">10</span></div>
       <div>🏆 <span id="score">0</span></div>
       <div class="rank">🎖 <span id="rank">Bronze</span></div>
     </div>
@@ -197,7 +196,7 @@ const hard = [
 ];
 
 let quiz=[];
-let i=0,score=0,lives=3,answer="",mode="easy";
+let i=0,score=0,answer="",mode="easy";
 
 // ▶ start game
 function start(m){
@@ -238,7 +237,6 @@ function check(btn){
   }else{
     btn.classList.add("wrong");
     document.getElementById("bad").play();
-    lives--;
 
     // 📳 vibration
     if(navigator.vibrate){
@@ -254,7 +252,6 @@ function check(btn){
   }
 
   document.getElementById("score").innerText=score;
-  document.getElementById("lives").innerText=lives;
 
   updateRank();
 
@@ -278,7 +275,7 @@ function updateRank(){
 function next(){
   i++;
 
-  if(lives<=0 || i>=quiz.length){
+  if(i>=quiz.length){
     end();
   }else{
     showQ();
