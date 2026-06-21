@@ -242,17 +242,33 @@ function check(btn){
   let buttons=document.querySelectorAll("button");
 
  if(btn.innerText===answer){
+
   btn.classList.add("correct");
   btn.innerHTML = "✅ " + btn.innerText;
 
-  document.getElementById("ok").play();
-
   score++;
-
+document.getElementById("ok").play();
   document.getElementById("q").innerHTML =
   "🎉 Congratulations! Correct Answer";
+
+}else{
+
+  btn.classList.add("wrong");
+  btn.innerHTML = "❌ " + btn.innerText;
+document.getElementById("bad").play();
+  document.getElementById("q").innerHTML =
+  "😢 Wrong Answer";
+
+  if(navigator.vibrate){
+    navigator.vibrate(300);
+  }
+
+  buttons.forEach(b=>{
+    if(b.innerText===answer){
+      b.classList.add("showCorrect");
+    }
+  });
 }
-  }else{
  btn.innerHTML = "❌ " + btn.innerText;
 
 document.getElementById("q").innerHTML =
