@@ -241,13 +241,22 @@ function showQ(){
 function check(btn){
   let buttons=document.querySelectorAll("button");
 
-  if(btn.innerText===answer){
-    btn.classList.add("correct");
-    document.getElementById("ok").play();
-    score++;
+ if(btn.innerText===answer){
+  btn.classList.add("correct");
+  btn.innerHTML = "✅ " + btn.innerText;
+
+  document.getElementById("ok").play();
+
+  score++;
+
+  document.getElementById("q").innerHTML =
+  "🎉 Congratulations! Correct Answer";
+}
   }else{
-    btn.classList.add("wrong");
-    document.getElementById("bad").play();
+ btn.innerHTML = "❌ " + btn.innerText;
+
+document.getElementById("q").innerHTML =
+"😢 Wrong Answer";
 
     // 📳 vibration
     if(navigator.vibrate){
