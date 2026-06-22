@@ -250,6 +250,7 @@ const hard = [
 {q:"Capital of Peru?",a:"Lima",o:["Lima","Cusco","Arequipa","Quito"]},
 {q:"Capital of Colombia?",a:"Bogota",o:["Bogota","Medellin","Cali","Cartagena"]},
 {q:"Capital of Mexico?",a:"Mexico City",o:["Guadalajara","Cancun","Mexico City","Monterrey"]},
+  
 {q:"Capital of Afghanistan?",a:"Kabul",o:["Kandahar","Herat","Kabul","Mazar-i-Sharif"]},
 {q:"Capital of Bangladesh?",a:"Dhaka",o:["Chittagong","Dhaka","Khulna","Rajshahi"]},
 {q:"Capital of Sri Lanka?",a:"Colombo",o:["Colombo","Kandy","Galle","Jaffna"]},
@@ -320,12 +321,17 @@ function goBack(){
 }
 // ▶ start game
 function start(m){
-  mode=m;
-  quiz=(m==="easy")?easy:hard;
+  mode = m;
+  quiz = (m === "easy") ? easy : hard;
 
-  document.getElementById("lobby").style.display="none";
-  document.getElementById("game").style.display="block";
-document.getElementById("highScore").innerText = highScore;
+  i = 0;
+  score = 0;
+
+  document.getElementById("lobby").style.display = "none";
+  document.getElementById("game").style.display = "block";
+
+  document.getElementById("highScore").innerText = highScore;
+
   showQ();
 }
 
@@ -348,11 +354,9 @@ function showQ(){
 
 // ✔ check answer
 function check(btn){
-
-  if(!canClick) return;
-  canClick = false;
-
   let buttons = document.querySelectorAll("#options button");
+
+  buttons.forEach(b => b.disabled = true);
 
   if(btn.innerText === answer){
 
@@ -364,8 +368,8 @@ function check(btn){
 
     document.getElementById("q").innerHTML =
       "🎉 Correct Answer!";
-
-  } else {
+  } 
+  else {
 
     btn.classList.add("wrong");
     btn.innerHTML = "❌ " + btn.innerText;
@@ -375,10 +379,6 @@ function check(btn){
     document.getElementById("q").innerHTML =
       "😢 Wrong Answer";
 
-    if(navigator.vibrate){
-      navigator.vibrate(300);
-    }
-
     buttons.forEach(b=>{
       if(b.innerText === answer){
         b.classList.add("showCorrect");
@@ -387,12 +387,23 @@ function check(btn){
   }
 
   document.getElementById("score").innerText = score;
+
   updateRank();
 
-  setTimeout(()=>{
+  setTimeout(() => {
     next();
-    canClick = true;
-  }, 900);
+  }, 1000);
+}
+  function updateRank(){
+  let r="Bronze";
+
+  if(score>=2) r="Silver";
+  if(score>=4) r="Gold";
+  if(score>=6) r="Platinum";
+  if(score>=8) r="Diamond";
+  if(score>=10) r="ACE";
+
+  document.getElementById("rank").innerText = r;
 }
 // ➡ next
 function next(){
