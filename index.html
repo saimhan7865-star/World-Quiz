@@ -163,7 +163,7 @@ const easy = [
 {q:"Capital of UAE?",a:"Abu Dhabi",o:["Dubai","Abu Dhabi","Sharjah","Ajman"]},
 {q:"Capital of South Korea?",a:"Seoul",o:["Seoul","Busan","Incheon","Daegu"]},
 {q:"Capital of Egypt?",a:"Cairo",o:["Cairo","Alexandria","Giza","Luxor"]},
-{q:"Capital of South Africa?",a:"Pretoria",o:["Cape Town","Johannesburg","Pretoria","Durban"]}
+{q:"Capital of South Africa?",a:"Pretoria",o:["Cape Town","Johannesburg","Pretoria","Durban"]},
 {q:"Capital of Afghanistan?",a:"Kabul",o:["Kandahar","Herat","Kabul","Mazar-i-Sharif"]},
 {q:"Capital of Bangladesh?",a:"Dhaka",o:["Chittagong","Dhaka","Khulna","Rajshahi"]},
 {q:"Capital of Sri Lanka?",a:"Colombo",o:["Colombo","Kandy","Galle","Jaffna"]},
@@ -249,7 +249,7 @@ const hard = [
 {q:"Capital of Chile?",a:"Santiago",o:["Santiago","Valparaiso","Lima","Cusco"]},
 {q:"Capital of Peru?",a:"Lima",o:["Lima","Cusco","Arequipa","Quito"]},
 {q:"Capital of Colombia?",a:"Bogota",o:["Bogota","Medellin","Cali","Cartagena"]},
-{q:"Capital of Mexico?",a:"Mexico City",o:["Guadalajara","Cancun","Mexico City","Monterrey"]}
+{q:"Capital of Mexico?",a:"Mexico City",o:["Guadalajara","Cancun","Mexico City","Monterrey"]},
 {q:"Capital of Afghanistan?",a:"Kabul",o:["Kandahar","Herat","Kabul","Mazar-i-Sharif"]},
 {q:"Capital of Bangladesh?",a:"Dhaka",o:["Chittagong","Dhaka","Khulna","Rajshahi"]},
 {q:"Capital of Sri Lanka?",a:"Colombo",o:["Colombo","Kandy","Galle","Jaffna"]},
@@ -382,7 +382,9 @@ function check(btn){
   }
 
   document.getElementById("score").innerText = score;
-
+  
+updateRank();
+  
   if(score > highScore){
     highScore = score;
     localStorage.setItem("highScore", highScore);
