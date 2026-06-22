@@ -535,7 +535,8 @@ function check(btn){
     btn.innerHTML = "✅ " + btn.innerText;
 
     score++;
-    document.getElementById("ok").play();
+    let sound = document.getElementById("ok").cloneNode();
+sound.play();
 
     document.getElementById("q").innerHTML =
       "🎉 Correct Answer!";
@@ -545,7 +546,8 @@ function check(btn){
     btn.classList.add("wrong");
     btn.innerHTML = "❌ " + btn.innerText;
 
-    document.getElementById("bad").play();
+   let sound = document.getElementById("bad").cloneNode();
+sound.play();
 
     document.getElementById("q").innerHTML =
       "😢 Wrong Answer";
