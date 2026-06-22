@@ -102,6 +102,7 @@ button{
 <!-- 🔊 SOUNDS -->
 <audio id="ok" src="https://actions.google.com/sounds/v1/ui/click.ogg"></audio>
 <audio id="bad" src="https://actions.google.com/sounds/v1/ui/beep_short.ogg"></audio>
+  <audio id="click" src="https://actions.google.com/sounds/v1/ui/click.ogg"></audio>
 
 <div class="overlay">
 
@@ -523,6 +524,7 @@ function showQ(){
 
 // ✔ check answer
 function check(btn){
+  document.getElementById("click").play();
   let buttons = document.querySelectorAll("#options button");
 
   buttons.forEach(b => b.disabled = true);
