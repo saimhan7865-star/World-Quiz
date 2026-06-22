@@ -114,6 +114,7 @@ button{
 
   <button class="btn" onclick="start('easy')">EASY</button>
   <button class="btn" onclick="start('hard')">HARD</button>
+  <button class="btn" onclick="start('flag')">FLAG QUIZ</button>
 </div>
 
 <!-- GAME -->
@@ -307,6 +308,13 @@ const hard = [
 {q:"Capital of Wales?",a:"Cardiff",o:["Swansea","Newport","Cardiff","Wrexham"]}
   ];
 
+  const flag = [
+{q:"Which country flag is this?",a:"Pakistan",img:"https://flagcdn.com/w320/pk.png",o:["India","Pakistan","Iran","Turkey"]},
+{q:"Which country flag is this?",a:"India",img:"https://flagcdn.com/w320/in.png",o:["India","Nepal","Sri Lanka","Bangladesh"]},
+{q:"Which country flag is this?",a:"Japan",img:"https://flagcdn.com/w320/jp.png",o:["China","Japan","Korea","Thailand"]},
+{q:"Which country flag is this?",a:"USA",img:"https://flagcdn.com/w320/us.png",o:["USA","UK","Canada","Australia"]},
+{q:"Which country flag is this?",a:"France",img:"https://flagcdn.com/w320/fr.png",o:["Italy","France","Germany","Spain"]},
+];
 let quiz=[];
   let canClick = true;
 let i=0,score=0,answer="",mode="easy";
@@ -320,9 +328,18 @@ function goBack(){
   document.getElementById("lobby").style.display="block";
 }
 // ▶ start game
-function start(m){
+ function start(m){
   mode = m;
-  quiz = (m === "easy") ? easy : hard;
+
+  if(m === "flag"){
+    quiz = flag;
+  } 
+  else if(m === "easy"){
+    quiz = easy;
+  } 
+  else {
+    quiz = hard;
+  }
 
   i = 0;
   score = 0;
@@ -337,19 +354,27 @@ function start(m){
 
 // ❓ question
 function showQ(){
-  let q=quiz[i];
-  answer=q.a;
+  let q = quiz[i];
+  answer = q.a;
 
-  let opts=q.o.sort(()=>Math.random()-0.5);
+  let opts = q.o.sort(()=>Math.random()-0.5);
 
-  document.getElementById("q").innerText="❓ "+q.q;
+  // FLAG MODE
+  if(mode === "flag"){
+    document.getElementById("q").innerHTML =
+      `<img src="${q.img}" style="width:100%;max-height:180px;border-radius:10px;margin-bottom:10px;">
+       <div>❓ ${q.q}</div>`;
+  }
+  else{
+    document.getElementById("q").innerText = "❓ " + q.q;
+  }
 
-  let html="";
+  let html = "";
   opts.forEach(o=>{
-    html+=`<button onclick="check(this)">${o}</button>`;
+    html += `<button onclick="check(this)">${o}</button>`;
   });
 
-  document.getElementById("options").innerHTML=html;
+  document.getElementById("options").innerHTML = html;
 }
 
 // ✔ check answer
@@ -358,7 +383,7 @@ function check(btn){
 
   buttons.forEach(b => b.disabled = true);
 
-  if(btn.innerText === answer){
+  if(btn.textContent.replace("✅","").replace("❌","").trim() === answer)
 
     btn.classList.add("correct");
     btn.innerHTML = "✅ " + btn.innerText;
