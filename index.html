@@ -307,6 +307,7 @@ const hard = [
   ];
 
 let quiz=[];
+  let canClick = true;
 let i=0,score=0,answer="",mode="easy";
 let highScore = localStorage.getItem("highScore") || 0;
 
@@ -347,6 +348,10 @@ function showQ(){
 
 // ✔ check answer
 function check(btn){
+
+  if(!canClick) return;
+  canClick = false;
+
   let buttons = document.querySelectorAll("#options button");
 
   if(btn.innerText === answer){
@@ -358,7 +363,7 @@ function check(btn){
     document.getElementById("ok").play();
 
     document.getElementById("q").innerHTML =
-      "🎉 Congratulations! Correct Answer";
+      "🎉 Correct Answer!";
 
   } else {
 
@@ -382,18 +387,12 @@ function check(btn){
   }
 
   document.getElementById("score").innerText = score;
-  
-updateRank();
-  
-  if(score > highScore){
-    highScore = score;
-    localStorage.setItem("highScore", highScore);
-    document.getElementById("highScore").innerText = highScore;
-    document.getElementById("homeHighScore").innerText = highScore;
-  }
-
   updateRank();
-  setTimeout(next, 900);
+
+  setTimeout(()=>{
+    next();
+    canClick = true;
+  }, 900);
 }
 // ➡ next
 function next(){
